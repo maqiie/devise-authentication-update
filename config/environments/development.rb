@@ -9,6 +9,11 @@ Rails.application.configure do
   config.cache_classes = false
 
   # Do not eager load code on boot.
+
+
+  config.active_storage.service = :local
+
+
   config.eager_load = false
 
   # Show full error reports.
