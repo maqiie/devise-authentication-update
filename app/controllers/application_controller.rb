@@ -4,5 +4,7 @@ class ApplicationController < ActionController::Base
 
         include DeviseTokenAuth::Concerns::SetUserByToken
 
-        
+        rescue_from CanCan::AccessDenied do |exception|
+                redirect_to root_path, alert: "Access denied."
+              end
 end
