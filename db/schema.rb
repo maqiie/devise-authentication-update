@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_21_023831) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_07_121123) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,9 +42,54 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_023831) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "appointments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "technician_id", null: false
+    t.datetime "date"
+    t.string "service_type"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "latitude"
+    t.float "longitude"
+    t.index ["technician_id"], name: "index_appointments_on_technician_id"
+    t.index ["user_id"], name: "index_appointments_on_user_id"
+  end
+
+  create_table "clients", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "content"
+    t.bigint "user_id", null: false
+    t.bigint "service_request_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["service_request_id"], name: "index_messages_on_service_request_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "service_requests", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "technicians", force: :cascade do |t|
+    t.string "name"
+    t.string "expertise"
+    t.integer "ratings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -74,4 +122,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_023831) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "appointments", "technicians"
+  add_foreign_key "appointments", "users"
+  add_foreign_key "messages", "service_requests"
+  add_foreign_key "messages", "users"
 end

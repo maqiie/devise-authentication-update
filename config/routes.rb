@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   }
 
   resources :posts
+  resources :service_requests, only: [:create]
+
 end
